@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, useInView, animate, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { motion, useInView, animate, useMotionValue, useSpring, useTransform, AnimatePresence } from 'framer-motion';
 import { Github, Linkedin, Mail, Menu, Code, Cpu, Activity, Layout, Terminal, Zap, Globe, ChevronDown } from 'lucide-react';
 import { Typewriter } from 'react-simple-typewriter';
 import ParticleBackground from './ParticleBackground';
 import profileImg from './profile.jpg';
+
 
 
 // --- NEW 3D TILT CARD COMPONENT (FIXED) ---
@@ -143,7 +144,74 @@ const AestheticCursor = () => {
     </>
   );
 };
+// --- MATRIX DATA RAIN COMPONENT ---
+const ZapLink = ({ href, children }) => {
+  const [isHovered, setIsHovered] = useState(false);
 
+  // Generate 15 streams of data
+  const drops = Array.from({ length: 15 });
+
+  return (
+    <a 
+      href={href} 
+      target="_blank" 
+      rel="noreferrer" 
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className="relative group p-4 bg-black border border-slate-800 rounded-2xl text-slate-400 hover:text-cyan-400 hover:bg-slate-950 transition-all duration-300 hover:-translate-y-1 shadow-lg hover:shadow-cyan-500/20 cursor-none overflow-visible"
+    >
+      {/* 1. HOVER GLOW BORDER (Pulsing Shield) */}
+      <div className={`absolute inset-0 rounded-2xl border-2 border-cyan-500/50 transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`} />
+      
+      {/* 2. THE ICON (Kept on top) */}
+      <div className="relative z-20">{children}</div>
+
+      {/* 3. MATRIX RAIN EFFECT */}
+      {isHovered && (
+        <div className="absolute top-full left-0 w-full h-32 pointer-events-none overflow-visible z-10">
+          {drops.map((_, i) => {
+            // Random properties for "Chaos"
+            const randomX = Math.floor(Math.random() * 40) - 20; // Spread left/right
+            const randomDuration = 0.5 + Math.random() * 0.5;    // Fast speed
+            const randomDelay = Math.random() * 0.5;             // Staggered start
+            const height = Math.random() * 20 + 10;              // Length of the trail
+            
+            return (
+              <motion.div
+                key={i}
+                initial={{ y: -10, opacity: 0 }}
+                animate={{ 
+                  y: 80,             // Shoot down
+                  opacity: [0, 1, 0] // Flash in and out
+                }}
+                transition={{ 
+                  duration: randomDuration, 
+                  repeat: Infinity, 
+                  delay: randomDelay,
+                  ease: "easeIn"     // Accelerate like heavy rain
+                }}
+                style={{
+                  left: '50%',
+                  marginLeft: randomX,
+                  height: height,
+                }}
+                // The "Meteor" Look: A gradient streak
+                className="absolute top-0 w-[2px] bg-gradient-to-b from-cyan-300 via-cyan-500 to-transparent shadow-[0_0_8px_rgba(34,211,238,0.8)] rounded-full"
+              >
+                {/* Optional: Add binary numbers at the tip of larger drops */}
+                {height > 25 && (
+                  <span className="absolute bottom-0 -left-[3px] text-[8px] text-white font-mono font-bold">
+                    {Math.random() > 0.5 ? '1' : '0'}
+                  </span>
+                )}
+              </motion.div>
+            );
+          })}
+        </div>
+      )}
+    </a>
+  );
+};
 // --- SPOTLIGHT CARD ---
 const SpotlightCard = ({ children, className = "", spotColor = "rgba(168, 85, 247, 0.25)" }) => {
   const divRef = useRef(null);
@@ -417,7 +485,7 @@ const App = () => {
       </nav>
 
       {/* Hero Section */}
-      <section id="home" className="relative min-h-screen flex flex-col justify-center items-center overflow-hidden text-center px-4 bg-slate-950">
+      <section id="home" className="relative min-h-screen flex flex-col justify-center items-center overflow-hidden text-center px-4 bg-black">
         <ParticleBackground />
         
         {/* Subtle Background Glow that follows mouse is managed by SpotlightCard in other sections, kept simple here for performance */}
@@ -453,7 +521,7 @@ const App = () => {
       </section>
 
       {/* About Section */}
-      <section id="about" className="py-24 bg-slate-950 px-4 relative overflow-hidden">
+      <section id="about" className="py-24 bg-black px-4 relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
            <div className="absolute -top-[20%] -left-[10%] w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[120px] animate-pulse"></div>
            <div className="absolute -bottom-[20%] -right-[10%] w-[500px] h-[500px] bg-cyan-500/10 rounded-full blur-[120px]" style={{ animationDelay: '2s' }}></div>
@@ -522,7 +590,7 @@ const App = () => {
       </section>
 
       {/* Skills Section */}
-      <section id="skills" className="py-24 relative overflow-hidden bg-slate-950">
+      <section id="skills" className="py-24 relative overflow-hidden bg-black">
         <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(147, 51, 234, 0.5) 1px, transparent 0)', backgroundSize: '30px 30px' }}></div>
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-cyan-500/5 blur-[100px] rounded-full pointer-events-none"></div>
 
@@ -615,28 +683,30 @@ const App = () => {
         </div>
       </section>
 
-      {/* Projects */}
-      <section id="projects" className="py-20 px-4">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl font-bold mb-16"><span className={gradientText}></span></h2>
-      {/* Projects Section - Big Sliding Carousel */}
-      <section id="projects" className="py-20 px-4 relative bg-transparent overflow-hidden">
+      {/* 3. Projects Section */}
+      <section id="projects" className="py-20 px-4 bg-black relative overflow-hidden">
+        
+        {/* --- Background Effects (Stars & Nebula) --- */}
+        <div className="absolute inset-0 w-full h-full star-pattern"></div>
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-900/20 blur-[120px] rounded-full pointer-events-none"></div>
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-900/20 blur-[120px] rounded-full pointer-events-none"></div>
+        {/* ------------------------------------------- */}
+
         <div className="max-w-full mx-auto relative z-10">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-bold mb-4">Featured <span className={gradientText}>Projects</span></h2>
             <p className="text-slate-400">Swiping through engineering excellence.</p>
           </div>
           
-          {/* THE NEW CAROUSEL COMPONENT */}
+          {/* THE CAROUSEL COMPONENT */}
           <ProjectCarousel projects={projects} />
           
         </div>
       </section>
-        </div>
-      </section>
 
       {/* Contact Section */}
-      <section id="contact" className="py-24 bg-slate-950 relative overflow-hidden px-4">
+      <section id="contact" className="py-24 bg-black relative overflow-hidden px-4">
+        <div className="absolute inset-0 w-full h-full star-pattern"></div>
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-purple-600/20 blur-[100px] rounded-full pointer-events-none"></div>
         <div className="max-w-6xl mx-auto relative z-10">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-16">
@@ -666,6 +736,16 @@ const App = () => {
                   <a href={`mailto:${personalData.email}`} className="p-4 bg-slate-900 rounded-full text-slate-400 hover:text-cyan-400 hover:bg-slate-800 transition-all cursor-none"><Mail size={24} /></a>
                 </div>
               </div>
+              {/* --- NEW QUICK LINKS --- */}
+              <div className="mt-8 pt-6 border-t border-white/10">
+                <h3 className="text-white font-semibold mb-4">Quick Access</h3>
+                <div className="flex gap-6 text-sm font-medium text-slate-400">
+                  <a href="#home" className="hover:text-cyan-400 transition-colors cursor-none">Home</a>
+                  <a href="#about" className="hover:text-cyan-400 transition-colors cursor-none">About</a>
+                  <a href="#skills" className="hover:text-cyan-400 transition-colors cursor-none">Skills</a>
+                  <a href="#projects" className="hover:text-cyan-400 transition-colors cursor-none">Projects</a>
+                </div>
+              </div>
             </motion.div>
             
             <SpotlightCard className="p-8" spotColor="rgba(34, 211, 238, 0.15)">
@@ -680,7 +760,65 @@ const App = () => {
         </div>
       </section>
 
-      <footer className="py-8 text-center text-slate-600 text-sm">© 2026 {personalData.name}</footer>
+      {/* --- BLUEPRINT FOOTER WITH ELECTRIC GROUNDING --- */}
+        <footer className="py-20 bg-black relative overflow-hidden flex flex-col items-center justify-center">
+          
+         {/* --- LIQUID PLASMA NAME WITH REFLECTION --- */}
+        
+        {/* 1. Define the Animation Style */}
+        <style>{`
+          @keyframes textShine {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+          }
+          .animate-text-shine {
+            background-size: 200% auto;
+            animation: textShine 5s linear infinite;
+          }
+        `}</style>
+
+        <div className="relative mb-10 z-10 text-center">
+          
+          {/* 2. THE MAIN NAME (Moving Gradient) */}
+          <h1 className="text-[12vw] md:text-[150px] font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-500 to-cyan-400 animate-text-shine select-none relative z-10">
+            Binayak Panda
+          </h1>
+
+          {/* 3. THE REFLECTION (Flipped & Faded) */}
+          <h1 className="absolute top-full left-0 w-full text-[12vw] md:text-[150px] font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-500 to-cyan-400 animate-text-shine select-none opacity-20 origin-bottom transform -scale-y-100 blur-sm pointer-events-none">
+            Binayak Panda
+          </h1>
+
+          {/* 4. Floor Fade (Hides the bottom of reflection) */}
+          <div className="absolute top-full left-0 w-full h-full bg-gradient-to-b from-transparent to-black pointer-events-none z-20"></div>
+
+        </div>
+
+          {/* 2. Social Icons (Now with Zap Effect!) */}
+          <div className="flex gap-6 mb-8 relative z-20">
+              <ZapLink href={personalData.socials.github}>
+                <Github size={28} />
+              </ZapLink>
+
+              <ZapLink href={personalData.socials.linkedin}>
+                <Linkedin size={28} />
+              </ZapLink>
+
+              <ZapLink href={`mailto:${personalData.email}`}>
+                <Mail size={28} />
+              </ZapLink>
+          </div>
+
+          {/* 3. The Ground Line (Where the electricity flows to) */}
+          <div className="relative w-full max-w-2xl h-10 flex items-center justify-center mb-8">
+              <div className="absolute w-full h-[1px] bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-50"></div>
+              <div className="relative w-2 h-2 bg-cyan-400 rounded-full shadow-[0_0_15px_rgba(34,211,238,1)] z-10"></div>
+              <div className="absolute w-20 h-20 bg-cyan-500/20 blur-xl rounded-full"></div>
+          </div>
+
+          <p className="text-slate-500 font-medium text-sm relative z-20">© 2026 Binayak Panda. All rights reserved.</p>
+        </footer>
     </div>
   );
 };

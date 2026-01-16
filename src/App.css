@@ -40,3 +40,25 @@
 .read-the-docs {
   color: #888;
 }
+/* --- DEEP NEBULA BACKGROUND --- */
+.bg-nebula {
+  background-color: #000000; /* Pitch Black */
+  background-image: 
+    radial-gradient(circle at 0% 0%, rgba(76, 29, 149, 0.15) 0%, transparent 40%), /* Faint Purple Haze (Top Left) */
+    radial-gradient(circle at 100% 0%, rgba(6, 182, 212, 0.1) 0%, transparent 40%),  /* Faint Cyan Haze (Top Right) */
+    radial-gradient(circle at 100% 100%, rgba(76, 29, 149, 0.15) 0%, transparent 40%), /* Purple (Bottom Right) */
+    radial-gradient(circle at 0% 100%, rgba(6, 182, 212, 0.1) 0%, transparent 40%);  /* Cyan (Bottom Left) */
+  position: relative;
+}
+
+/* --- BRIGHT STAR PATTERN --- */
+.star-pattern {
+  background-image: 
+    radial-gradient(white 2px, transparent 2px),
+    radial-gradient(rgba(255,255,255,0.8) 1px, transparent 1px);
+  background-size: 40px 40px, 80px 80px;
+  background-position: 0 0, 20px 20px;
+  opacity: 0.8; 
+  z-index: 0;
+  pointer-events: none;
+}
