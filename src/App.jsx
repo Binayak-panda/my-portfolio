@@ -536,7 +536,7 @@ const App = () => {
                </div>
                <p className="text-slate-400 leading-relaxed text-lg">I bridge the gap between hardware and software, crafting innovative solutions that bring ideas to life.</p>
                
-               <div className="flex flex-wrap gap-6 p-6 bg-slate-900/50 rounded-2xl border border-slate-800/50 backdrop-blur-sm">
+               <div className="flex flex-wrap gap-6 p-6 bg-black rounded-2xl border border-slate-800 backdrop-blur-sm">
                  <div className="flex items-center gap-3">
                     <div className="p-3 bg-slate-800/80 rounded-xl"><Cpu className="w-6 h-6 text-cyan-400" /></div>
                     <div><div className="text-2xl font-bold text-white"><Counter to={4} suffix="+" /></div><div className="text-sm text-slate-400 font-medium">Projects</div></div>
@@ -616,7 +616,7 @@ const App = () => {
                     boxShadow: idx === 0 ? "0px 10px 30px -10px rgba(34, 211, 238, 0.2)" : "0px 10px 30px -10px rgba(168, 85, 247, 0.2)"
                   }
                 }}
-                className="bg-slate-950/50 p-8 rounded-3xl border border-slate-800 h-full"
+                className="bg-black p-8 rounded-3xl border border-slate-800 h-full"
               >
                 <h3 className="text-xl font-bold text-white mb-8 flex items-center gap-3">
                   {idx === 0 ? <Zap className="text-cyan-400" /> : <Terminal className="text-purple-400" />}
@@ -640,10 +640,10 @@ const App = () => {
                           borderColor: skill.stroke 
                         }
                       }}
-                      className="flex items-center justify-between p-4 rounded-xl bg-slate-900/50 border border-slate-800/50 transition-colors group cursor-none"
+                      className="flex items-center justify-between p-4 rounded-xl bg-cyan-500/5 border border-slate-800/50 transition-colors group cursor-none"
                     >
                       <div className="flex items-center gap-4">
-                        <div className={`p-2.5 rounded-lg bg-slate-950 ${skill.color} group-hover:scale-110 transition-transform`}>{skill.icon}</div>
+                        <div className={`p-2.5 rounded-lg bg-cyan-500/5 ${skill.color} group-hover:scale-110 transition-transform`}>{skill.icon}</div>
                         <span className="font-medium text-slate-200 text-lg group-hover:text-white transition-colors">{skill.name}</span>
                       </div>
                       
@@ -817,7 +817,7 @@ const App = () => {
               <div className="absolute w-20 h-20 bg-cyan-500/20 blur-xl rounded-full"></div>
           </div>
 
-          <p className="text-slate-500 font-medium text-sm relative z-20">© 2026 Binayak Panda. All rights reserved.</p>
+          <p className="text-slate-500 font-medium text-sm relative z-20">© 2026 Binayak Panda.</p>
         </footer>
     </div>
   );
